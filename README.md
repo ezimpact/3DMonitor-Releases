@@ -28,7 +28,7 @@ The application runs on **Windows x64**. Printers must be reachable over the net
 
 Open the [latest release](https://github.com/ezimpact/3DMonitor-Releases/releases/latest), download **3DMonitor-Setup-v….exe** from **Assets**, and run the installer.
 
-Updates preserve settings, printers, history, Telegram and paired remote devices, and create a backup before replacing files. Public updates require no GitHub token. Update controls are available in **About**. Automatic checks only report new versions; downloading and installation are initiated by the user.
+Updates preserve settings, printers, history, Telegram and paired remote devices, and create a backup before replacing files. Update controls are available in **About**. Automatic checks only report new versions; downloading and installation are initiated by the user.
 
 This repository distributes installers and application documentation. Application source code is not published here.
 
@@ -60,7 +60,7 @@ Suggestions and bug reports: **[Telegram @ezimpact](https://t.me/ezimpact)** or 
 
 Откройте [последний выпуск](https://github.com/ezimpact/3DMonitor-Releases/releases/latest), скачайте файл **3DMonitor-Setup-v….exe** из раздела **Assets** и запустите установщик.
 
-Настройки, принтеры, история, Telegram и удалённые привязки сохраняются при обновлении; перед заменой файлов создаётся резервная копия. Публичные обновления не требуют токена GitHub. Обновления доступны в **«О программе»**. Автоматическая проверка только сообщает о новой версии; скачивание и установка запускаются пользователем.
+Настройки, принтеры, история, Telegram и удалённые привязки сохраняются при обновлении; перед заменой файлов создаётся резервная копия. Обновления доступны в **«О программе»**. Автоматическая проверка только сообщает о новой версии; скачивание и установка запускаются пользователем.
 
 В этом репозитории размещаются установщики и описание программы. Исходный код приложения сюда не публикуется.
 
