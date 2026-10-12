@@ -71,3 +71,19 @@ Suggestions and bug reports: **[Telegram @ezimpact](https://t.me/ezimpact)** or 
 ## Support / Поддержка
 
 [Support development via lava.top](https://app.lava.top/ezimpact). Russian support options are also available in the application. / Поддержать разработку можно через раздел поддержки в программе.
+
+## Screenshots / Скриншоты
+
+Camera imagery is fully covered for privacy. / Содержимое видеокамер полностью закрыто.
+
+### English interface
+
+![Printer dashboard in English](dashboard-en.jpg)
+
+![Camera view in English](cameras-en.jpg)
+
+### Русский интерфейс
+
+![Панель принтера на русском](dashboard-ru.jpg)
+
+![Просмотр камер на русском](cameras-ru.jpg)
