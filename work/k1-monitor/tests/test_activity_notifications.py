@@ -103,7 +103,7 @@ class NotificationTests(unittest.IsolatedAsyncioTestCase):
         await self.notifications.configure(False,True,['completed','paused'],'123456789:'+('a'*30))
         self.notifications.data.update(events=['completed','offline','paused','online'],chats=[{'id':7,'name':'Me'}],update_offset=20);self.notifications.save()
         before=json.loads(self.notifications.path.read_text());loaded=Notifications(self.notifications.path,self.store)
-        after=json.loads(self.notifications.path.read_text());self.assertEqual(after,{**before,'events':['completed','paused']});self.assertEqual(loaded.public()['events'],['completed','paused']);self.assertEqual(len(EVENTS),8)
+        after=json.loads(self.notifications.path.read_text());self.assertEqual(after,{**before,'events':['completed','paused']});self.assertEqual(loaded.public()['events'],['completed','paused']);self.assertNotIn('offline',EVENTS);self.assertNotIn('online',EVENTS);self.assertIn('filament_low',EVENTS);self.assertIn('temperature_warning',EVENTS)
     async def test_removed_queued_events_never_reach_either_channel_even_with_stale_preferences(self):
         self.notifications.token='fixture';self.notifications.data.update(telegram=True,chats=[{'id':7}],events=['offline','online'])
         for kind in ['offline','online']:
