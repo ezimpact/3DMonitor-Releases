@@ -1,0 +1,17 @@
+{
+  "three": "0.180.0",
+  "occt-import-js": "0.0.23",
+  "occt_commit": "d2abb6d844231cb8f29be6894440874a4700e4a5",
+  "files": {
+    "LICENSE_LGPL_21.txt": "e237fa56668030e928551ddd60f05df5fe957f75eab874bbd017e085ed722e7c",
+    "occt-import-js.js": "3fb44ce11d00611f9b3f3c5775d520ebab48930c1f08279b7b1316f05f0d3379",
+    "occt-import-js.wasm": "33391fc9d94ea5c869a6718488bf0a9a464222bac9bdc764dfe1690cef281952",
+    "OCCT-IMPORT-LICENSE.txt": "7ffe1954587c77dfba1cf8eb9b2ea743671fa6e63f9e7a2f258119d42e14eefe",
+    "OCCT_LGPL_EXCEPTION.txt": "04580a884ea6cea294402649ff7b5cbb167d47462d1340a4ed33e550db10a81b",
+    "OrbitControls.js": "8857d3a90d674b92e5557187f44a568f9c102824720fb04e8a118e28ae53668a",
+    "STLLoader.js": "60faf9078caadf7d51494af91106d7451217badbfdc78fa2a8ae84fb38ac779a",
+    "THREE-LICENSE.txt": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601",
+    "three.core.js": "eb077d2417f61d3e6d9264c317cabc4ea35769ed6b0ab533067292a550784c20",
+    "three.module.js": "c8211c69345d2e9949dc7a8ac969380497aa0600a5a8ac6a459c8cd02dd9cb8a"
+  }
+}
