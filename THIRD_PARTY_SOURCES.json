@@ -1,0 +1,14 @@
+{
+  "archives": [
+    {
+      "name": "occt-d2abb6d-source.tar.gz",
+      "url": "https://codeload.github.com/Open-Cascade-SAS/OCCT/tar.gz/d2abb6d844231cb8f29be6894440874a4700e4a5",
+      "sha256": "2715d89a1bc44dfd34dab88f729c445ea93f6b57d6539b0c89614a80ae144a6c"
+    },
+    {
+      "name": "occt-import-js-0.0.23-source.tgz",
+      "url": "https://registry.npmjs.org/occt-import-js/-/occt-import-js-0.0.23.tgz",
+      "sha256": "eaab9ca7bf02799360d8fc70468dc8bf78eb2073c3fafb1ff982006e558fc1f3"
+    }
+  ]
+}
