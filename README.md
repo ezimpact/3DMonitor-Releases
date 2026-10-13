@@ -7,6 +7,10 @@
 ## English
 **3DMonitor is a Windows application that brings your 3D printers together in one dashboard.** Follow print progress, temperatures and camera feeds, browse job history, and receive Telegram notifications.
 
+![Printer dashboard in English](dashboard-en.jpg)
+
+![Camera view in English](cameras-en.jpg)
+
 ### Features
 
 - **Multiple printers in one dashboard.** Connection status, progress, remaining time and temperatures, plus a dedicated camera view.
@@ -109,19 +113,3 @@ Suggestions and bug reports: **[Telegram @ezimpact](https://t.me/ezimpact)** or 
 ## Support / Поддержка
 
 [Support development via lava.top](https://app.lava.top/ezimpact). Russian support options are also available in the application. / Поддержать разработку можно через раздел поддержки в программе.
-
-## Screenshots / Скриншоты
-
-Camera imagery in the dashboard screenshots below is fully covered for privacy. / На скриншотах интерфейса ниже содержимое видеокамер полностью закрыто.
-
-### English interface
-
-![Printer dashboard in English](dashboard-en.jpg)
-
-![Camera view in English](cameras-en.jpg)
-
-### Русский интерфейс
-
-![Панель принтера на русском](dashboard-ru.jpg)
-
-![Просмотр камер на русском](cameras-ru.jpg)
