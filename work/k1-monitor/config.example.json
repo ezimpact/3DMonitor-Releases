@@ -1,0 +1,5 @@
+{
+  "poll_seconds": 5,
+  "stale_after_seconds": 15,
+  "printers": []
+}
