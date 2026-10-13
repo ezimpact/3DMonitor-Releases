@@ -1,5 +1,5 @@
-import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.101';
-const kinds={started:t('Начало печати'),paused:t('Пауза'),resumed:t('Продолжение'),completed:t('Завершение'),cancelled:t('Отмена'),failed:t('Неудачное завершение'),error:t('Ошибки'),runout:t('Окончание филамента')};
+import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.102.1';
+const kinds={started:t('Начало печати'),paused:t('Пауза'),resumed:t('Продолжение'),completed:t('Завершение'),cancelled:t('Отмена'),failed:t('Неудачное завершение'),error:t('Ошибки'),runout:t('Окончание филамента'),filament_low:t('Остатка катушки может не хватить'),temperature_warning:t('Нестабильная температура сопла')};
 const states={printing:t('Печатает'),paused:t('На паузе'),pausing:t('Пауза'),stopping:t('Остановка'),restoring:t('Восстановление'),completed:t('Завершено'),stopped:t('Отменено'),failed:t('Не завершено'),unknown:t('Результат неизвестен')};
 export function setupActivity({api,remote,getSelected,prepareHistoryPrint}){
  const $=id=>document.getElementById(id);let timer=null,generation=0,printerId=null,offset=0,total=0,preparing=false;

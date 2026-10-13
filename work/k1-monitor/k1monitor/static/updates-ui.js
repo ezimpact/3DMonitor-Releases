@@ -1,4 +1,4 @@
-import {t,tm} from './i18n.js?v=0.101';
+import {t,tm} from './i18n.js?v=0.102.1';
 export function setupUpdates({api,remote,environment=globalThis}){
   const $=id=>document.getElementById(id);if(remote){$('updates-section').hidden=true;return;}
   let state=null,busy=false,polling=false,ticks=0;

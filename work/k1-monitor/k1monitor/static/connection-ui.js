@@ -1,4 +1,4 @@
-import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.101';
+import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.102.1';
 // Credentials are write-only. Blank secrets retain an existing login on edits.
 export const defaultPort=protocol=>({creality:9999,moonraker:7125,octoprint:80,prusalink:80})[protocol]??9999;
 export function setupConnectionFields(prefix){

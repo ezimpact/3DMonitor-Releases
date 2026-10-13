@@ -1,4 +1,4 @@
-import translations from './locales/en.js?v=0.101';
+import translations from './locales/en.js?v=0.102.1';
 const supported=['ru','en'];
 export const language=globalThis.document?.querySelector('meta[name="3dm-language"]')?.content==='en'?'en':'ru';
 export const locale=language==='en'?'en-US':'ru-RU';

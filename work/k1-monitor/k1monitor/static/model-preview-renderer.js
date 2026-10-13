@@ -1,4 +1,4 @@
-import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.101';
+import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.102.1';
 import * as THREE from './vendor/model-preview/three.module.js';
 import {OrbitControls} from './vendor/model-preview/OrbitControls.js';
 

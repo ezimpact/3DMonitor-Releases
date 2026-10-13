@@ -1,5 +1,5 @@
-import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.101';
-import {toolbarIcon} from './toolbar-icons.js?v=0.101';
+import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.102.1';
+import {toolbarIcon} from './toolbar-icons.js?v=0.102.1';
 
 export function setupToolbar({document:doc=document,environment=globalThis}={}){
   const definitions={

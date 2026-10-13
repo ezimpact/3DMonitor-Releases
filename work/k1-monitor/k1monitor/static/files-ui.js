@@ -1,4 +1,4 @@
-import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.101';
+import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.102.1';
 // Printing requires an explicit confirmation. No launch probes or tests.
 export function setupFiles({api,getPrinters,apiBase='/api/v1',inline=false}){
   const $=id=>document.getElementById(id);

@@ -9,14 +9,15 @@
   <meta name="k1-access" content="__ACCESS_MODE__">
   <meta name="k1-api-base" content="__API_BASE__">
   <title>3DMonitor · Принтеры</title>
-  <link rel="stylesheet" href="/static/ui.css?v=0.101">
-  <link rel="stylesheet" href="/static/layout.css?v=0.101">
-  <link rel="stylesheet" href="/static/remote.css?v=0.101">
-  <link rel="stylesheet" href="/static/appearance.css?v=0.101">
-  <link rel="stylesheet" href="/static/graphite.css?v=0.101">
-  <script type="module" src="/static/ui.js?v=0.101"></script>
-  <link rel="stylesheet" href="/static/model-preview.css?v=0.101">
-  <link rel="stylesheet" href="/static/activity.css?v=0.101">
+  <link rel="stylesheet" href="/static/ui.css?v=0.102.1">
+  <link rel="stylesheet" href="/static/layout.css?v=0.102.1">
+  <link rel="stylesheet" href="/static/remote.css?v=0.102.1">
+  <link rel="stylesheet" href="/static/appearance.css?v=0.102.1">
+  <link rel="stylesheet" href="/static/graphite.css?v=0.102.1">
+  <script type="module" src="/static/ui.js?v=0.102.1"></script>
+  <link rel="stylesheet" href="/static/model-preview.css?v=0.102.1">
+  <link rel="stylesheet" href="/static/activity.css?v=0.102.1">
+<link rel="stylesheet" href="/static/filament.css?v=0.102.1">
 </head>
 <body>
       <header class="app-topbar"><a class="app-wordmark" href="/" aria-label="3DMonitor"><span class="app-name"><span>3D</span>Monitor</span></a><div class="header-actions"><button class="toolbar-button" id="sound-toggle" aria-label="Звуковые уведомления" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m11 4-5 4H3v8h3l5 4V4Zm4 4a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></svg></button><button class="toolbar-button" id="phone-open" aria-label="Удалённое подключение"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="13" height="10" rx="2"/><rect x="17" y="8" width="5" height="12" rx="1"/><path d="M6 18h5m-2-4v4"/></svg></button><button class="toolbar-button" id="notifications-open" aria-label="Уведомления"></button><button class="toolbar-button" id="appearance-open" aria-label="Оформление"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18h2a2 2 0 0 0 0-4h-1a2 2 0 0 1 0-4h4a4 4 0 0 0 4-4c0-3-4-6-9-6Z"/></svg></button><button class="toolbar-button" id="language-open" aria-label="Язык программы"></button><button class="toolbar-button" id="model-open" aria-label="Предпросмотр STL/STEP">◇</button><button class="toolbar-button" id="about-open" aria-label="О программе">i</button><button class="toolbar-button" id="donate-open" aria-label="Поддержать 3DMonitor">♡</button><button class="text-button" id="phone-logout" hidden>Выйти</button><span class="badge" id="connection"><span class="dot"></span><span id="connection-text">Подключение…</span></span></div></header>
@@ -33,9 +34,12 @@
       <div id="print-alerts" class="print-alerts" role="alert" hidden></div>
       <p class="mobile-note" id="mobile-note" hidden>Подключение через Tailscale. Видео передаётся через ПК, до 5 кадров в секунду.</p>
       <div id="empty" class="empty" hidden><span class="empty-icon">▱</span><h1>Добавьте первый принтер</h1><p>Укажите его IP или найдите принтеры в локальной сети.</p><button class="primary" id="empty-add">Добавить принтер</button></div>
-      <div id="printer-content">
+      <div class="filament-warning" id="filament-alert" role="alert" hidden></div>
+<div class="filament-warning" id="temperature-alert" role="alert" hidden></div>
+<div id="printer-content">
         <section class="intro"><div><div class="title-row"><h1 id="printer-name">Принтер</h1><button class="secondary" id="history-open" aria-label="История печати выбранного принтера">История печати</button><button class="icon-button" id="rename-open" aria-label="Настройки принтера" title="Название и IP принтера">✎</button></div><p class="subtitle"><span id="printer-model">—</span><span class="separator">/</span><span id="printer-ip">—</span></p></div><div class="update"><span>Обновление данных</span><strong id="updated">Ожидание</strong></div></section>
         <div class="notice" id="notice" role="status" hidden></div>
+
         <div class="workspace">
           <section class="job panel" aria-label="Текущая печать">
             <div class="job-top"><span class="status" id="status">Ожидание данных</span><span class="eyebrow">ТЕКУЩЕЕ ЗАДАНИЕ</span></div>
@@ -57,7 +61,16 @@
 </div>
 </div></section>
         <div class="files-toolbar"><button class="secondary" id="files-open">▤ Файлы на принтере</button></div>
-        <section class="panel inline-files" id="files-dialog" aria-labelledby="files-title"><div class="dialog-heading"><h2 id="files-title">G-code</h2><button class="primary" id="files-upload" disabled>Загрузить файл G-code</button></div><p id="files-printer" class="hint"></p><div class="file-navigation"><button class="secondary" id="files-up" disabled aria-label="На уровень выше">↑</button><nav id="files-breadcrumbs" aria-label="Путь папки G-code"></nav></div><div class="file-search"><input id="files-search" type="search" placeholder="Поиск по названию" aria-label="Поиск G-code"><button class="secondary" id="files-refresh">Обновить</button><input id="files-upload-input" type="file" accept=".gcode,.gco" hidden></div><div class="file-selection"><label><input id="files-all" type="checkbox"> Выбрать все показанные</label><button id="files-delete" class="danger-secondary" disabled>Удалить выбранные (0)</button></div><p id="files-note" class="hint"></p><p class="hint" id="files-transfer-note" role="status"></p><p class="form-error" id="files-error" role="alert" hidden></p><div id="files-list"></div><p class="hint" id="files-empty">Читаем файлы принтера…</p><div class="files-pagination"><label for="files-page-size">Файлов на странице <select id="files-page-size"><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select></label><span id="files-page-info" class="hint" role="status"></span><div class="files-page-buttons"><button type="button" class="secondary" id="files-page-prev">Назад</button><nav id="files-page-numbers" aria-label="Страницы G-code"></nav><button type="button" class="secondary" id="files-page-next">Далее</button></div></div></section>
+        <section class="filament-panel temperature-watch-panel" aria-label="Контроль температуры сопла">
+ <label class="unload-choice" id="temperature-watch-control"><input id="temperature-watch-enabled" type="checkbox"> Контроль температуры сопла</label>
+ <p class="hint" id="temperature-watch-note"></p><p class="form-error" id="temperature-watch-error" role="alert" hidden></p>
+</section>
+<section class="filament-panel" id="filament-panel" aria-labelledby="filament-title" hidden>
+ <div class="dialog-heading"><h2 id="filament-title">Катушка филамента</h2><button class="secondary" id="filament-settings" type="button">Настройки катушки</button></div>
+ <div class="filament-summary"><div><span>Расчётный остаток</span><strong id="filament-weight">Неизвестно</strong></div><div><span>До конца задания</span><strong id="filament-needed">—</strong></div></div>
+ <p class="filament-warning" id="filament-warning" role="status" hidden>Остатка катушки может не хватить. Проверьте катушку; печать продолжается.</p><p class="hint" id="filament-note"></p>
+</section>
+<section class="panel inline-files" id="files-dialog" aria-labelledby="files-title"><div class="dialog-heading"><h2 id="files-title">G-code</h2><button class="primary" id="files-upload" disabled>Загрузить файл G-code</button></div><p id="files-printer" class="hint"></p><div class="file-navigation"><button class="secondary" id="files-up" disabled aria-label="На уровень выше">↑</button><nav id="files-breadcrumbs" aria-label="Путь папки G-code"></nav></div><div class="file-search"><input id="files-search" type="search" placeholder="Поиск по названию" aria-label="Поиск G-code"><button class="secondary" id="files-refresh">Обновить</button><input id="files-upload-input" type="file" accept=".gcode,.gco" hidden></div><div class="file-selection"><label><input id="files-all" type="checkbox"> Выбрать все показанные</label><button id="files-delete" class="danger-secondary" disabled>Удалить выбранные (0)</button></div><p id="files-note" class="hint"></p><p class="hint" id="files-transfer-note" role="status"></p><p class="form-error" id="files-error" role="alert" hidden></p><div id="files-list"></div><p class="hint" id="files-empty">Читаем файлы принтера…</p><div class="files-pagination"><label for="files-page-size">Файлов на странице <select id="files-page-size"><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select></label><span id="files-page-info" class="hint" role="status"></span><div class="files-page-buttons"><button type="button" class="secondary" id="files-page-prev">Назад</button><nav id="files-page-numbers" aria-label="Страницы G-code"></nav><button type="button" class="secondary" id="files-page-next">Далее</button></div></div></section>
         <footer><span id="firmware">Прошивка —</span><span id="errors">Ожидаем состояние</span></footer>
       </div>
       <section id="camera-wall" aria-label="Просмотр камер" hidden>
@@ -85,7 +98,19 @@
 
 <dialog id="update-confirm-dialog"><h2>Установить обновление?</h2><p class="hint">Данные программы будут сохранены в резервную копию. 3DMonitor закроется на время установки и запустится снова. Печать на принтерах продолжится; мониторинг и автоматические действия временно будут недоступны.</p><div class="dialog-buttons"><button class="secondary" data-close="update-confirm-dialog">Отмена</button><button class="primary" id="update-confirm-submit">Установить и перезапустить</button></div></dialog>
 <dialog id="language-dialog" aria-labelledby="language-title"><div class="dialog-heading"><h2 id="language-title">Язык программы</h2><button class="icon-button" data-close="language-dialog" aria-label="Закрыть выбор языка">×</button></div><form id="language-form"><label for="language-choice">Язык</label><select id="language-choice"><option value="ru">Русский</option><option value="en">English</option></select><p class="hint">Язык этой страницы сохраняется в браузере. На основном ПК выбор также применяется к программе и новым устройствам.</p><p id="language-error" class="form-error" role="alert" hidden></p><div class="dialog-buttons"><button class="secondary" type="button" data-close="language-dialog">Отмена</button><button class="primary" id="language-save" type="submit">Применить</button></div></form></dialog>
-  <div id="toast" role="status" hidden></div>
+  <dialog id="filament-dialog" aria-labelledby="filament-dialog-title"><div class="dialog-heading"><h2 id="filament-dialog-title">Настройки катушки</h2><button class="icon-button" type="button" data-close="filament-dialog" aria-label="Закрыть">×</button></div>
+ <p id="filament-dialog-name"></p><form id="filament-form">
+ <label class="unload-choice"><input id="filament-enabled" type="checkbox"> Учитывать расход филамента</label>
+ <label>Вес новой катушки, г<input id="filament-capacity" type="number" min="50" max="10000" step="1" required></label>
+ <p class="hint">Вес самого пластика, без пустой катушки. Новая катушка определяется после окончания филамента и продолжения того же задания.</p>
+ <label>Плотность пластика, г/см³<input id="filament-density" type="number" min="0.5" max="3" step="0.01" required></label>
+ <label>Диаметр филамента, мм<input id="filament-diameter" type="number" min="1" max="4" step="0.01" required></label>
+ <p class="hint">Параметры используются, если слайсер не записал их в G-code. По умолчанию 1,24 г/см³ и 1,75 мм. Меняйте плотность и диаметр между заданиями.</p>
+ <p class="hint" id="filament-current"></p><label>Уточнить текущий остаток, г<input id="filament-correction" type="number" min="0" max="10000" step="1" placeholder="Не менять"></label>
+ <p class="hint">Укажите вес оставшегося пластика без пустой катушки. Оставьте поле пустым, чтобы сохранить счётчик.</p>
+ <p id="filament-error" class="form-error" role="alert" hidden></p><div class="dialog-buttons"><button class="secondary" type="button" data-close="filament-dialog">Закрыть</button><button id="filament-save" class="primary" type="submit">Сохранить</button></div>
+ </form></dialog>
+<div id="toast" role="status" hidden></div>
 
   <dialog id="appearance-dialog" aria-labelledby="appearance-title">
     <div class="dialog-heading"><h2 id="appearance-title">Оформление</h2><button class="icon-button" data-close="appearance-dialog" aria-label="Закрыть оформление">×</button></div>

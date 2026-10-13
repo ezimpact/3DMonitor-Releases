@@ -1,4 +1,4 @@
-import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.101';
+import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.102.1';
 export const MAX_MODEL_BYTES=100*1024*1024;
 export const MAX_TRIANGLES=2_000_000;
 export function modelFormat(file){

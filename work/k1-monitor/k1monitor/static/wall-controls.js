@@ -1,4 +1,4 @@
-import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.101';
+import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.102.1';
 const icons={
   light:'<path d="M9 18h6m-5 3h4M8.5 14.5a6 6 0 1 1 7 0c-.9.7-1.5 1.8-1.5 3.5h-4c0-1.7-.6-2.8-1.5-3.5Z"/><path class="bulb-rays" d="M12 1v1M3 4l1 1m16-1-1 1M1 10h2m18 0h2"/>',
   pause:'<path d="M8 5v14M16 5v14" stroke-width="3"/>',
