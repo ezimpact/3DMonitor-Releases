@@ -1,0 +1,18 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {setupUpdates} from '../k1monitor/static/updates-ui.js';
+function fixture(remote=false){
+ const ids=['updates-section','updates-auto','updates-token','updates-forget','updates-status','updates-version','updates-download','updates-install','updates-save','updates-check','updates-progress','about-open','updates-form','update-confirm-dialog','update-confirm-submit','about-dialog'];
+ const nodes=Object.fromEntries(ids.map(id=>[id,{handlers:{},hidden:false,checked:true,value:'',textContent:'',classList:{toggle(){}},addEventListener(name,fn){this.handlers[name]=fn;},showModal(){this.open=true;},close(){this.open=false;}}]));
+ globalThis.document={getElementById:id=>nodes[id]};const calls=[];
+ let state={has_token:false,auto_check:true,phase:'current',installation_supported:true},timer;
+ const api=async(path,method='GET',body)=>{calls.push([path,method,body]);if(method==='PUT'){state={...state,auto_check:body.auto_check,has_token:!body.forget};}if(path.endsWith('/download'))state={...state,phase:'ready',downloaded:true};if(path.endsWith('/install'))state={...state,phase:'installing'};return state;};
+ setupUpdates({api,remote,environment:{setInterval(fn){timer=fn;return 1;},addEventListener(){},clearInterval(){}}});
+ return {nodes,calls,set state(value){state=value;},async settle(){await new Promise(resolve=>setImmediate(resolve));},tick(){timer();}};
+}
+test('remote page hides updates without requesting credentials',()=>{const f=fixture(true);assert.equal(f.nodes['updates-section'].hidden,true);assert.deepEqual(f.calls,[]);});
+test('public check needs no token and settings send only auto preference',async()=>{const f=fixture();await f.settle();assert.equal(f.nodes['updates-check'].disabled,false);await f.nodes['updates-form'].handlers.submit({preventDefault(){}});assert.deepEqual(f.calls.slice(1),[['/updates','PUT',{auto_check:true}],['/updates/check','POST',undefined]]);});
+test('download requires a separate install confirmation',async()=>{const f=fixture();await f.settle();f.state={has_token:false,auto_check:true,phase:'available',available:{version:'0.101',size:30},installation_supported:true};await f.nodes['about-open'].handlers.click();await f.nodes['updates-download'].handlers.click();assert.equal(f.calls.some(c=>c[0].endsWith('/install')),false);f.nodes['updates-install'].handlers.click();assert.equal(f.nodes['update-confirm-dialog'].open,true);await f.nodes['update-confirm-submit'].handlers.click();assert.equal(f.nodes['update-confirm-dialog'].open,false);assert.equal(f.calls.at(-1)[0],'/updates/install');});
+test('unsupported mode cannot open install confirmation',async()=>{const f=fixture();await f.settle();f.state={has_token:false,phase:'ready',downloaded:true,installation_supported:false};await f.nodes['about-open'].handlers.click();f.nodes['updates-install'].handlers.click();assert.equal(f.nodes['updates-install'].disabled,true);assert.equal(f.nodes['update-confirm-dialog'].open,undefined);});
+test('background status is refreshed once per minute when About is closed',async()=>{const f=fixture();await f.settle();for(let i=0;i<29;i++)f.tick();assert.equal(f.calls.length,1);f.tick();await f.settle();assert.equal(f.calls.length,2);});
+test('failed previous install is visible after application restart',async()=>{const f=fixture();await f.settle();f.state={has_token:false,phase:'current',last_install:{success:false}};await f.nodes['about-open'].handlers.click();assert.match(f.nodes['updates-status'].textContent,/не завершилась|failed/);});
