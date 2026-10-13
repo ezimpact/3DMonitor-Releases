@@ -9,7 +9,7 @@ sys.stdout.reconfigure(encoding='utf-8')
 
 workspace=Path(__file__).resolve().parents[2]
 build=Path(__file__).resolve().parent
-setup=workspace/'outputs/Public/3DMonitor-Setup-v0.101.exe'
+setup=workspace/'outputs/Public/3DMonitor-Setup-v0.102.1.exe'
 qa=build/('qa '+datetime.datetime.now().strftime('%Y%m%d-%H%M%S'))
 qa.mkdir(exist_ok=True)
 target=qa/'установленная программа'
@@ -141,7 +141,7 @@ from k1monitor.language import windows_language
 check(json.loads((target/'data/language.json').read_text())['language']==windows_language(),'installer default matches Windows display language')
 check(reg(runkey,'K1MonitorInstallerTest') is None,'autostart is disabled by default')
 check(reg(testkey,'InstallDir')[0]==str(target),'explicit destination with spaces')
-check(reg(uninstallkey,'DisplayVersion')[0]=='0.101','per-user uninstall registration')
+check(reg(uninstallkey,'DisplayVersion')[0]=='0.102.1','per-user uninstall registration')
 check(desktoplink.is_file() and (menu/'3DMonitor.lnk').is_file(),'desktop and Start menu shortcuts')
 check((menu/'Описание программы.lnk').is_file() and (menu/'Удалить 3DMonitor.lnk').is_file(),'correct Cyrillic filenames for installed shortcuts')
 check(json.loads((target/'data/printers.json').read_text())['printers']==[],'empty distributed printer registry')

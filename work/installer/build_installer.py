@@ -4,7 +4,7 @@ import argparse,hashlib,json,os,shutil,subprocess
 parser=argparse.ArgumentParser();parser.add_argument("--nsis",type=Path,required=True);args=parser.parse_args();nsis=args.nsis.resolve()
 assert nsis.is_file(),"NSIS compiler not found"
 root=Path(__file__).resolve().parents[2];work=Path(__file__).resolve().parent
-release=root/'outputs/3DMonitor-v0.101';payload=work/'payload';payload.mkdir(exist_ok=True)
+release=root/'outputs/3DMonitor-v0.102.1';payload=work/'payload';payload.mkdir(exist_ok=True)
 if any(payload.iterdir()):
     manifest=work/'payload-manifest.json'
     assert manifest.is_file(),'Nonempty staging folder without a build manifest.'
@@ -44,8 +44,8 @@ uninstall.append('RMDir "$INSTDIR"')
 (work/'payload-files.nsh').write_text('\n'.join(install)+'\n',encoding='utf-8-sig')
 (work/'payload-delete.nsh').write_text('\n'.join(uninstall)+'\n',encoding='utf-8-sig')
 assert not any(p.suffix.lower() in ('.py','.cs') for p in files)
-assert not any(p.name in ('remote.json','printer-credentials.json','notifications.json','print-history.sqlite3') for p in files)
-report={'version':'0.101','packager':'NSIS 3.13','source_files_excluded':True,'credentials_excluded':True,'empty_registry':True,'files':[str(p.relative_to(payload)) for p in files],'screensaver_excluded':True}
+assert not any(p.name in ('remote.json','printer-credentials.json','notifications.json','print-history.sqlite3','filament.sqlite3','temperature-watch.json') for p in files)
+report={'version':'0.102.1','packager':'NSIS 3.13','source_files_excluded':True,'credentials_excluded':True,'empty_registry':True,'files':[str(p.relative_to(payload)) for p in files],'screensaver_excluded':True}
 (work/'payload-manifest.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
 subprocess.run([str(nsis),'/V3','/INPUTCHARSET','UTF8',str(work/'K1Monitor.nsi')],check=True)
 print(json.dumps({k:v for k,v in report.items() if k!='files'}))
