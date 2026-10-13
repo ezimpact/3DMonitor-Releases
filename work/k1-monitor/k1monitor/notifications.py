@@ -17,7 +17,7 @@ import certifi
 
 from .config import atomic_json
 
-EVENTS={'started':'Печать началась','paused':'Печать на паузе','resumed':'Печать продолжена','completed':'Печать завершена','cancelled':'Печать отменена','failed':'Печать не завершена','error':'Ошибка принтера','runout':'Закончился филамент'}
+EVENTS={'started':'Печать началась','paused':'Печать на паузе','resumed':'Печать продолжена','completed':'Печать завершена','cancelled':'Печать отменена','failed':'Печать не завершена','error':'Ошибка принтера','runout':'Закончился филамент','filament_low':'Остатка катушки может не хватить','temperature_warning':'Нестабильная температура сопла'}
 
 def secret(value,decode=False):
     if os.name!='nt':return value
@@ -86,6 +86,22 @@ def display_filename(value):
 def text(event,translate=lambda value:value):
     t=translate
     lines=[t(EVENTS.get(event['kind'],'3DMonitor'))+' — '+event.get('name',t('Принтер'))]
+    if event['kind']=='filament_low':
+        lines.extend([t('Расчётный остаток: ')+str(round(event['available_g']))+t(' г'),
+                      t('До конца задания потребуется примерно: ')+str(round(event['required_g']))+t(' г'),
+                      t('Учтён запас на погрешность. Проверьте катушку; печать продолжается.')])
+        if event.get('file'):lines.append(display_filename(event['file'])[:180])
+        return '\n'.join(lines)[:3500]
+    if event['kind']=='temperature_warning':
+        reasons={'deviation':'Отклонение от цели не менее 10 °C держится 30 секунд.',
+                 'jumps':'Повторяющиеся перепады не менее 10 °C между проверками.',
+                 'not_heated':'За 5 минут при неизменной цели сопло не вышло на заданную температуру.'}
+        lines.extend([t(reasons[event['temperature_kind']]),
+                      t('Сейчас: ')+str(round(event['actual_c'],1))+t(' °C · цель: ')+str(round(event['target_c'],1))+t(' °C'),
+                      t('За последнюю минуту: ')+str(round(event['minimum_c'],1))+'–'+str(round(event['maximum_c'],1))+t(' °C'),
+                      t('Проверьте нагреватель, датчик, проводку и обдув. Это предупреждение, а не диагноз; печать продолжается.')])
+        if event.get('file'):lines.append(display_filename(event['file'])[:180])
+        return '\n'.join(lines)[:3500]
     if event['kind']=='started':
         started=event.get('started')
         started=started if isinstance(started,(int,float)) and not isinstance(started,bool) and 946684800<=started<=event['created'] else event['created']
@@ -119,6 +135,14 @@ class Notifications:
             except (ValueError,OSError):self.error='Токен недоступен для этого пользователя Windows. Введите его заново.'
             events=[kind for kind in self.data['events'] if kind in EVENTS]
             if events!=self.data['events']:self.data['events']=events;self.save()
+        if not self.data.get('filament_tracking_v1'):
+            self.data['events']=list(dict.fromkeys([*self.data['events'],'filament_low']))
+            self.data['filament_tracking_v1']=True
+            self.save()
+        if not self.data.get('temperature_watch_v1'):
+            self.data['events']=list(dict.fromkeys([*self.data['events'],'temperature_warning']))
+            self.data['temperature_watch_v1']=True
+            self.save()
     def save(self):atomic_json(self.path,self.data)
     def public(self):
         pair=self.pairing if self.pairing and self.pairing['expires']>self.clock() else None
@@ -159,7 +183,7 @@ class Notifications:
                 message=text(event,self.translate)
                 if row['windows']:
                     self.store.delivery(row['id'],windows=False)
-                    if self.data['windows'] and self.windows:self.windows('3DMonitor · '+event.get('name','Принтер'),message,event['kind'] in ('error','runout','failed'))
+                    if self.data['windows'] and self.windows:self.windows('3DMonitor · '+event.get('name','Принтер'),message,event['kind'] in ('error','runout','failed','filament_low','temperature_warning'))
                 if row['telegram']:
                     if not self.data['telegram'] or not self.token or not self.data['chats']:self.store.delivery(row['id'],telegram=False);continue
                     try:

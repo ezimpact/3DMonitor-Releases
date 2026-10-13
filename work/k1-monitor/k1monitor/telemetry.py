@@ -195,6 +195,7 @@ class Telemetry:
                 "nozzle": number(d.get("nozzleTemp")), "nozzle_target": number(d.get("targetNozzleTemp")),
                 "bed": number(d.get("bedTemp0")), "bed_target": number(d.get("targetBedTemp0")),
                 "chamber": number(d.get("boxTemp")),
+                "nozzle_sample": self.field_times.get('nozzleTemp'),
                 "nozzle_fresh":fresh and now-self.field_times.get('nozzleTemp',float('-inf'))<=self.stale_after and
                                ((self.persistent_status and 'targetNozzleTemp' in self.field_times) or
                                 now-self.field_times.get('targetNozzleTemp',float('-inf'))<=self.stale_after),

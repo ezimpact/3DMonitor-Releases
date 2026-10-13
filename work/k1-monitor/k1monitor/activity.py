@@ -119,7 +119,9 @@ class ActivityTracker:
             active=status in ACTIVE and bool(file)
             # A new filename or a large elapsed reset is a different job. Job IDs
             # on some adapters are session-local, so cannot identify restarts.
-            changed=job and active and (file!=job['file'] or elapsed is not None and job.get('elapsed') is not None and elapsed+60<job['elapsed'])
+            native=details.get('job_id');session=item.get('connection',{}).get('sessions')
+            new_native=previous and native and previous.get('native') and native!=previous['native'] and session==previous.get('session')
+            changed=job and active and (file!=job['file'] or previous and previous['status'] in TERMINAL|{'idle'} or new_native or elapsed is not None and job.get('elapsed') is not None and elapsed+60<job['elapsed'])
             if changed:self.finish(job,'unknown',now);self.running.pop(pid,None);job=None
             if active:
                 self.observed.add(pid)
@@ -145,7 +147,7 @@ class ActivityTracker:
             if previous:
                 if runout and not previous['runout'] and (job or active):emit('runout')
                 elif signature and signature!=previous['error'] and not runout:emit('error')
-            self.previous[pid]={'endpoint':address,'status':status,'error':signature,'runout':runout}
+            self.previous[pid]={'endpoint':address,'status':status,'error':signature,'runout':runout,'native':native,'session':session}
         return events
     def finish(self,job,status,now):job.update(status=status,ended=now,updated=now);self.store.save(job)
     def flush(self):
@@ -205,6 +207,10 @@ class ActivityService:
     def __init__(self,manager,notifications,relay=None):
         self.manager=manager;self.notifications=notifications
         self.store=notifications.store;self.tracker=ActivityTracker(self.store);self.tasks=[];self.import_status={};self.locks={};self.relay=relay
+        from .filament import FilamentService
+        self.filament=FilamentService(manager,self.tracker,notifications,self.store.path.with_name('filament.sqlite3'))
+        from .temperature_watch import TemperatureWatch
+        self.temperature_watch=TemperatureWatch(notifications,self.store.path.with_name('temperature-watch.json'))
         notifications.status_provider=self.status_reports;notifications.photo_provider=self.status_photo
         notifications.light_provider=self.set_lights
     async def start(self):
@@ -281,11 +287,14 @@ class ActivityService:
         return results
     async def stop(self):
         for task in self.tasks:task.cancel()
-        await asyncio.gather(*self.tasks,return_exceptions=True);self.tracker.flush();await self.notifications.stop()
+        await asyncio.gather(*self.tasks,return_exceptions=True);await self.filament.stop();self.tracker.flush();await self.notifications.stop()
     async def observe(self):
         while True:
             try:
-                for event in self.tracker.update(self.manager.snapshot()['printers']):self.notifications.enqueue(event)
+                items=self.manager.snapshot()['printers'];previous_jobs=dict(self.tracker.running)
+                for event in self.tracker.update(items):self.notifications.enqueue(event)
+                self.filament.observe(items,previous_jobs)
+                self.temperature_watch.update(items)
             except asyncio.CancelledError:raise
             except Exception:LOG.exception('Activity processing failed')
             await asyncio.sleep(1)

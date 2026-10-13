@@ -1,3 +1,3 @@
 """Local printer dashboard and model viewer."""
-__version__ = "0.101"
-__build__ = "0.101-public-release"
+__version__="0.102.1"
+__build__="0.102.1-temperature-opt-in"

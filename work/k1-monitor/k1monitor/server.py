@@ -118,6 +118,20 @@ class AutoUnloadRequest(BaseModel):
     temperature: int | None = Field(default=None,ge=180,le=300,strict=True)
 
 
+class FilamentRequest(BaseModel):
+    expected_endpoint: str = Field(max_length=1200)
+    enabled: bool | None = Field(default=None, strict=True)
+    capacity_g: float | None = Field(default=None, ge=50, le=10000, strict=True)
+    remaining_g: float | None = Field(default=None, ge=0, le=10000, strict=True)
+    density: float | None = Field(default=None, ge=.5, le=3, strict=True)
+    diameter: float | None = Field(default=None, ge=1, le=4, strict=True)
+
+
+class TemperatureWatchRequest(BaseModel):
+    expected_endpoint: str = Field(max_length=1200)
+    enabled: bool = Field(strict=True)
+
+
 class RemoteConfig(BaseModel):
     host: str = Field(max_length=253)
 
@@ -169,6 +183,14 @@ def create_app(manager, remote=None, relay=None, *, csrf_token=None, activity=No
     app = FastAPI(title="3DMonitor", version=__version__, lifespan=lifespan)
     app.state.csrf_token = token
     app.state.file_transfers = transfers
+
+    def dashboard_snapshot():
+        data=manager.snapshot()
+        if activity:
+            for item in data['printers']:
+                item['filament']=activity.filament.public(item['printer']['id'])
+                item['temperature_watch']=activity.temperature_watch.public(item['printer']['id'])
+        return data
 
     def is_remote(connection):
         return remote is not None and bool(remote.host) and connection.url.hostname == remote.host
@@ -226,6 +248,8 @@ def create_app(manager, remote=None, relay=None, *, csrf_token=None, activity=No
             return JSONResponse({"detail": "Подключитесь через Tailscale к адресу этого ПК"}, status_code=403)
         mobile = is_remote(request)
         path = request.url.path
+        if mobile and path.endswith(('/filament','/temperature-watch')) and request.method not in {'GET','HEAD'}:
+            return JSONResponse({'detail':'Настройки контроля температуры доступны на ПК' if path.endswith('/temperature-watch') else 'Настройки катушки доступны на ПК'},status_code=403)
         internal = path.startswith("/internal/")
         if internal and (mobile or (path != "/internal/camera-relay"
                                     and not worker_allowed(request, request.headers.get("x-k1-worker", "")))):
@@ -396,7 +420,37 @@ def create_app(manager, remote=None, relay=None, *, csrf_token=None, activity=No
 
     @app.get("/api/v1/status")
     async def status():
-        return manager.snapshot()
+        return dashboard_snapshot()
+
+    @app.get('/api/v1/printers/{printer_id}/filament')
+    async def filament_status(printer_id:str):
+        manager.get(printer_id)
+        if not activity:raise HTTPException(409,'Учёт катушек недоступен в этом режиме')
+        return activity.filament.public(printer_id)
+
+    @app.put('/api/v1/printers/{printer_id}/filament')
+    async def filament_config(printer_id:str,body:FilamentRequest):
+        if not activity:raise HTTPException(409,'Учёт катушек недоступен в этом режиме')
+        if not same_endpoint(body.expected_endpoint,endpoint(manager.entry(printer_id))):
+            raise ValueError('Подключение принтера изменилось')
+        changes=body.model_dump(exclude={'expected_endpoint'},exclude_unset=True)
+        if any(value is None and key!='remaining_g' for key,value in changes.items()):
+            raise ValueError('Некорректная настройка катушки')
+        return activity.filament.configure(printer_id,changes)
+
+    @app.get('/api/v1/printers/{printer_id}/temperature-watch')
+    async def temperature_watch_status(printer_id:str):
+        manager.get(printer_id)
+        if not activity:raise HTTPException(409,'Контроль температуры недоступен в этом режиме')
+        return activity.temperature_watch.public(printer_id)
+
+    @app.put('/api/v1/printers/{printer_id}/temperature-watch')
+    async def temperature_watch_config(printer_id:str,body:TemperatureWatchRequest):
+        manager.get(printer_id)
+        if not activity:raise HTTPException(409,'Контроль температуры недоступен в этом режиме')
+        if not same_endpoint(body.expected_endpoint,endpoint(manager.entry(printer_id))):
+            raise ValueError('Подключение принтера изменилось')
+        return activity.temperature_watch.configure(printer_id,body.enabled)
 
     @app.put('/api/v1/printer-order')
     async def printer_order(body: PrinterOrderRequest):
@@ -726,7 +780,7 @@ def create_app(manager, remote=None, relay=None, *, csrf_token=None, activity=No
                 if is_remote(ws) and not authorized(ws):
                     await ws.close(code=1008)
                     return
-                await ws.send_json(manager.snapshot())
+                await ws.send_json(dashboard_snapshot())
                 try:
                     await asyncio.wait_for(ws.receive_text(), timeout=1)
                 except TimeoutError:
