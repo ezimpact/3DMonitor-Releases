@@ -109,7 +109,3 @@ Suggestions and bug reports: **[Telegram @ezimpact](https://t.me/ezimpact)** or 
 ### Обратная связь
 
 Предложения и сообщения об ошибках: **[Telegram @ezimpact](https://t.me/ezimpact)** или ezimpactpsn@gmail.com.
-
-## Support / Поддержка
-
-[Support development via lava.top](https://app.lava.top/ezimpact). Russian support options are also available in the application. / Поддержать разработку можно через раздел поддержки в программе.
