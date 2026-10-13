@@ -1,4 +1,4 @@
-# Run and build 3DMonitor 0.101
+# Run and build 3DMonitor 0.102.1
 
 ## English
 
@@ -36,7 +36,7 @@ Install NSIS 3.13 from its official distribution. The build script accepts the p
 
 The script creates a new clean release directory, builds the executable with the supplied PyInstaller specification, prepares the separate model-preview files and invokes the supplied installer builder. It refuses to reuse an existing release directory. The installer is written to `outputs/Public/`. No program is launched and no printer is contacted during the build.
 
-The published installer's SHA256 is `87717366e970b7798d780142662cf260641d25da8dfaf299f38430d65b055591`. A local rebuild is not guaranteed to produce identical bytes: toolchains, timestamps and packaging can differ. Availability of source code does not by itself prove that an executable was built from that source or that software has no vulnerabilities.
+The published installer's SHA256 is `64c91201240e5ab0f012481cad81e0054cb5ad2bc97d5b9f36f5d5bb5d1a4e8e`. A local rebuild is not guaranteed to produce identical bytes: toolchains, timestamps and packaging can differ. Availability of source code does not by itself prove that an executable was built from that source or that software has no vulnerabilities.
 
 The preview dependencies are separate, replaceable files. Their versions, hashes, upstream source links and rebuilding instructions are in [THIRD_PARTY.md](THIRD_PARTY.md).
 
