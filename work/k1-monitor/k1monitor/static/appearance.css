@@ -1,0 +1,45 @@
+/* Device-local colors and image background. Loaded after the original styles. */
+body{position:relative;isolation:isolate}
+body.has-wallpaper::before,body.has-wallpaper::after{content:"";position:fixed;inset:0;pointer-events:none}
+body.has-wallpaper::before{z-index:-2;background-image:var(--wallpaper);background-size:cover;background-position:center}
+body.has-wallpaper::after{z-index:-1;background:var(--background-tint,var(--bg));opacity:var(--background-shade,.7)}
+.sidebar{--text:var(--sidebar-text);--muted:var(--sidebar-muted);color:var(--text);background:color-mix(in srgb,var(--sidebar,#141d18) 96%,transparent)}
+.panel,dialog,.help-content,.send-menu,.toolbar-tooltip{--text:var(--panel-text);--muted:var(--panel-muted);color:var(--text)}
+.panel{background:color-mix(in srgb,var(--panel) 94%,transparent)}
+.view-switch{background:var(--panel);color:var(--panel-text);border-color:var(--line)}
+.view-switch[aria-pressed="true"]{background:var(--green);color:var(--on-accent)}
+.status{background:color-mix(in srgb,var(--panel) 82%,var(--green));color:var(--text)}
+dialog,.help-content,.send-menu,.toolbar-tooltip{background:var(--panel);color:var(--text);border-color:var(--line)}
+input,select{background:color-mix(in srgb,var(--panel) 85%,var(--text));color:var(--text);border-color:var(--line)}
+.secondary,.wall-scale button,.wall-toolbar button,.sidebar-toggle{background:var(--panel);color:var(--text);border-color:var(--line)}
+.primary,.brand-mark{background:var(--green);color:var(--on-accent,#173222)}
+.primary:hover:not(:disabled){background:color-mix(in srgb,var(--green) 85%,var(--text))}
+.printer-item:hover,.icon-button:hover{background:color-mix(in srgb,var(--panel) 80%,var(--green))}
+.printer-item.selected,.printer-item.in-wall{background:color-mix(in srgb,var(--panel) 82%,var(--green));border-color:var(--green)}
+.camera-selection button,.file-preview,.tab,.calibration-modes{color:var(--text);border-color:var(--line)}
+.send-menu button:hover:not(:disabled){background:color-mix(in srgb,var(--panel) 82%,var(--green))}
+.header-actions .toolbar-button{display:grid;place-items:center;width:36px;height:36px;flex:none;padding:7px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--green)}
+.toolbar-button svg{display:block;width:22px;height:22px}.toolbar-button[aria-pressed="false"]{color:var(--muted)}
+.toolbar-button[data-audio-ready="false"][aria-pressed="true"]{border-style:dashed}
+.toolbar-button:hover{border-color:var(--green);background:color-mix(in srgb,var(--panel) 86%,var(--green))}
+.toolbar-tooltip{position:fixed;z-index:100;max-width:min(300px,calc(100vw - 16px));padding:11px 14px;border:1px solid var(--line);border-radius:9px;box-shadow:0 5px 20px #0006;font-size:12px;line-height:1.55;pointer-events:none}
+.appearance-colors{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+.appearance-colors label{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0}
+.appearance-colors input[type="color"]{width:52px;height:35px;padding:3px;flex:none;cursor:pointer}
+.appearance-presets{display:flex;gap:8px;flex-wrap:wrap}.appearance-file{margin:14px 0 8px}.appearance-file input{margin-top:8px;padding:9px;font-size:12px}
+.appearance-shade{display:flex;align-items:center;gap:12px}.appearance-shade input{flex:1;padding:0;accent-color:var(--green)}.appearance-shade output{min-width:38px}
+#appearance-dialog{width:520px}#appearance-dialog .hint{margin:12px 0}
+.appearance-busy input,.appearance-busy button{pointer-events:none;opacity:.6}
+/* The original camera overlays were 44px, now 22px on pointer-driven screens. */
+.wall-camera-controls{top:9px;right:9px;gap:6px}
+.wall-camera-controls .camera-light{width:22px;height:22px;min-width:22px;padding:3px;border-radius:6px;box-shadow:0 1px 6px #0008}
+.wall-camera-controls .camera-light svg{width:14px;height:14px}.wall-label{padding-right:155px;min-height:38px}
+@container(max-width:320px){.wall-camera-controls{top:9px;right:9px;display:flex;gap:5px}.wall-label{padding:39px 12px 10px;min-height:65px}.wall-tile .camera-drag{top:auto;bottom:8px;right:8px}}
+.wall-tile:fullscreen,.wall-tile.camera-expanded{background:#000;width:100vw;height:100vh;border:0;border-radius:0;container-type:normal}
+.wall-tile:fullscreen .wall-camera-button,.wall-tile.camera-expanded .wall-camera-button{width:100%;height:100%;aspect-ratio:auto}
+.wall-tile:fullscreen video,.wall-tile:fullscreen img,.wall-tile.camera-expanded video,.wall-tile.camera-expanded img{object-fit:contain;width:100%;height:100%}
+.wall-tile:fullscreen .wall-label,.wall-tile.camera-expanded .wall-label{padding:15px 175px 15px 18px;min-height:0}
+.wall-tile:fullscreen .camera-drag,.wall-tile.camera-expanded .camera-drag{display:none}
+.wall-tile.camera-expanded{position:fixed;inset:0;z-index:90}.camera-expanded-active{overflow:hidden}
+@media(pointer:coarse){.wall-camera-controls{gap:17px;top:13px;right:13px}.wall-camera-controls .camera-light{position:relative}.wall-camera-controls .camera-light::before{content:"";position:absolute;inset:-8px}.wall-label{padding-right:220px;padding-top:45px}}
+@media(max-width:580px){.appearance-colors{grid-template-columns:1fr}.header-actions{gap:6px}.header-actions .toolbar-button{width:32px;height:32px;padding:5px}}
