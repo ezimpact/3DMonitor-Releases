@@ -211,6 +211,8 @@ class ActivityService:
         self.filament=FilamentService(manager,self.tracker,notifications,self.store.path.with_name('filament.sqlite3'))
         from .temperature_watch import TemperatureWatch
         self.temperature_watch=TemperatureWatch(notifications,self.store.path.with_name('temperature-watch.json'))
+        from .print_costs import CostService
+        self.costs=CostService(manager,self.filament,self.store.path.with_name('print-pricing.json'))
         notifications.status_provider=self.status_reports;notifications.photo_provider=self.status_photo
         notifications.light_provider=self.set_lights
     async def start(self):
@@ -294,6 +296,7 @@ class ActivityService:
                 items=self.manager.snapshot()['printers'];previous_jobs=dict(self.tracker.running)
                 for event in self.tracker.update(items):self.notifications.enqueue(event)
                 self.filament.observe(items,previous_jobs)
+                self.costs.observe()
                 self.temperature_watch.update(items)
             except asyncio.CancelledError:raise
             except Exception:LOG.exception('Activity processing failed')
@@ -332,4 +335,6 @@ class ActivityService:
             except Exception:self.import_status[pid]='История с принтера сейчас недоступна. Локальные записи сохранены; попробуйте обновить позже.'
     def history(self,pid,offset=0):
         self.manager.get(pid)
-        return {**self.store.list(pid,offset),'message':self.import_status.get(pid,'3DMonitor сохраняет наблюдаемые задания. Можно обновить историю с принтера.')}
+        result=self.store.list(pid,offset)
+        self.costs.history(pid,result['items'])
+        return {**result,'message':self.import_status.get(pid,'3DMonitor сохраняет наблюдаемые задания. Можно обновить историю с принтера.')}

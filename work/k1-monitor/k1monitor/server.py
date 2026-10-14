@@ -127,6 +127,28 @@ class FilamentRequest(BaseModel):
     diameter: float | None = Field(default=None, ge=1, le=4, strict=True)
 
 
+class PricingValues(BaseModel):
+    currency: Literal['RUB','USD','EUR']
+    price_per_kg: float | None = Field(default=None,ge=0,le=1e7,strict=True)
+    mean_power_w: float = Field(default=0,ge=0,le=100000,strict=True)
+    electricity_rate: float = Field(default=0,ge=0,le=1e6,strict=True)
+    machine_hour_rate: float = Field(default=0,ge=0,le=1e7,strict=True)
+    labor_hour_rate: float = Field(default=0,ge=0,le=1e7,strict=True)
+    manual_work_cost: float = Field(default=0,ge=0,le=1e9,strict=True)
+    extra_material_cost: float = Field(default=0,ge=0,le=1e9,strict=True)
+    failure_percent: float = Field(default=0,ge=0,le=99.99,strict=True)
+    extra_cost: float = Field(default=0,ge=0,le=1e9,strict=True)
+    markup_percent: float = Field(default=0,ge=0,le=10000,strict=True)
+
+class PricingRequest(PricingValues):
+    expected_endpoint: str = Field(max_length=1200)
+
+class CostCalculation(PricingValues):
+    price_per_kg: float = Field(ge=0,le=1e7,strict=True)
+    filament_g: float = Field(ge=0,le=1e7,strict=True)
+    hours: float = Field(ge=0,le=87600,strict=True)
+    labor_hours: float = Field(default=0,ge=0,le=87600,strict=True)
+
 class TemperatureWatchRequest(BaseModel):
     expected_endpoint: str = Field(max_length=1200)
     enabled: bool = Field(strict=True)
@@ -190,6 +212,7 @@ def create_app(manager, remote=None, relay=None, *, csrf_token=None, activity=No
             for item in data['printers']:
                 item['filament']=activity.filament.public(item['printer']['id'])
                 item['temperature_watch']=activity.temperature_watch.public(item['printer']['id'])
+                item['costing']=activity.costs.public(item['printer']['id'])
         return data
 
     def is_remote(connection):
@@ -248,6 +271,8 @@ def create_app(manager, remote=None, relay=None, *, csrf_token=None, activity=No
             return JSONResponse({"detail": "Подключитесь через Tailscale к адресу этого ПК"}, status_code=403)
         mobile = is_remote(request)
         path = request.url.path
+        if mobile and path.endswith('/pricing') and request.method not in {'GET','HEAD'}:
+            return JSONResponse({'detail':'Тарифы принтера доступны для изменения на ПК'},status_code=403)
         if mobile and path.endswith(('/filament','/temperature-watch')) and request.method not in {'GET','HEAD'}:
             return JSONResponse({'detail':'Настройки контроля температуры доступны на ПК' if path.endswith('/temperature-watch') else 'Настройки катушки доступны на ПК'},status_code=403)
         internal = path.startswith("/internal/")
@@ -421,6 +446,25 @@ def create_app(manager, remote=None, relay=None, *, csrf_token=None, activity=No
     @app.get("/api/v1/status")
     async def status():
         return dashboard_snapshot()
+
+    @app.post('/api/v1/cost/calculate')
+    async def print_cost_calculate(body:CostCalculation):
+        from .print_costs import calculate
+        return calculate(body.model_dump())
+
+    @app.get('/api/v1/printers/{printer_id}/pricing')
+    async def print_pricing_status(printer_id:str):
+        manager.get(printer_id)
+        if not activity:raise HTTPException(409,'Тарифы недоступны в этом режиме')
+        return activity.costs.public(printer_id)
+
+    @app.put('/api/v1/printers/{printer_id}/pricing')
+    async def print_pricing_config(printer_id:str,body:PricingRequest):
+        manager.get(printer_id)
+        if not activity:raise HTTPException(409,'Тарифы недоступны в этом режиме')
+        if not same_endpoint(body.expected_endpoint,endpoint(manager.entry(printer_id))):
+            raise ValueError('Подключение принтера изменилось')
+        return activity.costs.configure(printer_id,body.model_dump(exclude={'expected_endpoint'}))
 
     @app.get('/api/v1/printers/{printer_id}/filament')
     async def filament_status(printer_id:str):
