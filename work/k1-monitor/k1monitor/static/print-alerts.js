@@ -1,7 +1,7 @@
-import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.102.1';
-import {toolbarIcon} from './toolbar-icons.js?v=0.102.1';
-import {describePrinterError} from './printer-errors.js?v=0.102.1';
-export {describePrinterError} from './printer-errors.js?v=0.102.1';
+import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.103.3';
+import {toolbarIcon} from './toolbar-icons.js?v=0.103.3';
+import {describePrinterError} from './printer-errors.js?v=0.103.3';
+export {describePrinterError} from './printer-errors.js?v=0.103.3';
 export function errorLabel(item){
   const error=item.error??{code:item.error_code,key:null,message:'',active:item.error_code!=null&&item.error_code!==0};
   const codes=[error.code,error.key].filter(value=>value!=null&&String(value)!=='0'&&String(value)!=='');

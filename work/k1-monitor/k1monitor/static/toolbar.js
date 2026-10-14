@@ -1,5 +1,5 @@
-import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.102.1';
-import {toolbarIcon} from './toolbar-icons.js?v=0.102.1';
+import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.103.3';
+import {toolbarIcon} from './toolbar-icons.js?v=0.103.3';
 
 export function setupToolbar({document:doc=document,environment=globalThis}={}){
   const definitions={
@@ -19,11 +19,15 @@ export function setupToolbar({document:doc=document,environment=globalThis}={}){
   function hide(){environment.clearTimeout(timer);timer=null;target=null;tip.hidden=true;
     if(shown){const ids=(shown.getAttribute('aria-describedby')||'').split(' ').filter(id=>id&&id!==tip.id);if(ids.length)shown.setAttribute('aria-describedby',ids.join(' '));else shown.removeAttribute('aria-describedby');shown=null;}}
   function schedule(button){if(target===button)return;hide();if(!button||button.hidden)return;target=button;
+    const requestedDelay=Number(button.getAttribute('data-tooltip-delay')??3000);
+    const delay=Number.isFinite(requestedDelay)&&requestedDelay>=0&&requestedDelay<=10000?requestedDelay:3000;
     timer=environment.setTimeout(()=>{if(target!==button||!button.isConnected||button.hidden)return;shown=button;tip.textContent=button.getAttribute('data-tooltip');tip.hidden=false;
-      const rect=button.getBoundingClientRect(),width=tip.getBoundingClientRect().width,viewport=doc.documentElement.clientWidth;
-      tip.style.left=Math.max(8,Math.min(viewport-width-8,rect.right-width))+'px';tip.style.top=(rect.bottom+10)+'px';
+      const rect=button.getBoundingClientRect(),size=tip.getBoundingClientRect(),viewport=doc.documentElement.clientWidth;
+      tip.style.left=Math.max(8,Math.min(viewport-size.width-8,rect.right-size.width))+'px';
+      const below=rect.bottom+10,available=doc.documentElement.clientHeight;
+      tip.style.top=(below+size.height>available-8?Math.max(8,rect.top-size.height-10):below)+'px';
       const ids=(button.getAttribute('aria-describedby')||'').split(' ').filter(Boolean);button.setAttribute('aria-describedby',[...ids,tip.id].join(' '));
-    },3000);
+    },delay);
   }
   doc.addEventListener('pointerover',event=>schedule(event.target.closest?.('[data-tooltip]')));
   doc.addEventListener('pointerout',event=>{if(target&&!target.contains(event.relatedTarget))hide();});

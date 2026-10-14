@@ -1,4 +1,18 @@
 .filament-panel{margin:14px 0;padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+/* Spool and job price live below the current print controls. */
+.job-material-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:18px;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
+.job-material-row>.filament-panel{min-width:0;margin:0;padding:0;border:0;border-radius:0;background:transparent;overflow-wrap:anywhere}
+.job-material-row .dialog-heading{flex-wrap:wrap;gap:10px;align-items:flex-start}
+.job-material-row .filament-panel h2{font-size:14px;flex-basis:140px;min-height:0;margin:0}
+.job-material-row .secondary{padding:8px 12px;font-size:12px;white-space:nowrap}
+.job-material-row .hint{margin:8px 0 0;line-height:1.6;font-size:12px}
+.temperature-watch-toggle{position:relative;display:grid;place-items:center;flex:none;width:28px;height:28px;margin-left:auto;border:1px solid var(--line);border-radius:6px;color:var(--muted);cursor:pointer}
+.temperature-watch-toggle input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+.temperature-watch-toggle svg{width:19px;height:19px;pointer-events:none}
+.temperature-watch-toggle:has(input:checked){background:var(--green);border-color:var(--green);color:var(--text)}
+.temperature-watch-toggle:has(input:focus-visible){outline:2px solid var(--green);outline-offset:3px}
+.temperature-watch-toggle:has(input:disabled){opacity:.5;cursor:wait}
+.temperature-watch-toggle[hidden]{display:none}
 .filament-panel .dialog-heading{margin-bottom:10px}.filament-panel h2{margin:0;font-size:16px}.filament-summary{display:flex;gap:24px;flex-wrap:wrap}.filament-summary>div{display:flex;flex-direction:column;gap:4px;color:var(--muted);font-size:12px}.filament-summary strong{font-size:21px;color:var(--text)}
 .filament-warning{padding:10px 13px;margin:12px 0;border:1px solid #e9a23b;border-radius:9px;color:var(--text);background:rgba(233,162,59,.12);font-size:13px;overflow-wrap:anywhere}
 #filament-dialog{width:min(560px,calc(100vw - 24px));max-height:90dvh;overflow:auto}#filament-form{display:grid;gap:12px}#filament-form>label:not(.unload-choice){display:grid;gap:6px;font-size:13px}#filament-form input[type=number]{width:100%;box-sizing:border-box}#filament-form .hint{margin:0}#filament-panel[hidden],#filament-alert[hidden],#filament-warning[hidden]{display:none}

@@ -1,4 +1,4 @@
-import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.102.1';
+import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.103.3';
 // Each view owns its camera connections. Disposal cancels both signaling and media.
 export class CameraPlayer {
   constructor({video, image, placeholder, message, onState, negotiate, relay=false, apiBase='/api/v1', autoRetry=true, environment=globalThis}) {

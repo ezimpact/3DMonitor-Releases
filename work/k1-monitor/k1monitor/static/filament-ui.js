@@ -1,4 +1,4 @@
-import {t,tm,locale} from './i18n.js?v=0.102.1';
+import {t,tm,locale} from './i18n.js?v=0.103.3';
 
 export function setupFilament({api,remote,getSelected,getPrinters}){
  const $=id=>document.getElementById(id);let edited=null,saving=false,watchSaving=false;
@@ -34,6 +34,8 @@ export function setupFilament({api,remote,getSelected,getPrinters}){
   $('temperature-watch-enabled').disabled=watchSaving||!item;
   if(!watchSaving)$('temperature-watch-enabled').checked=!!watch?.enabled;
   $('temperature-watch-note').textContent=watch?(watch.enabled?t('Контроль сопла: раз в 5 секунд. Отклонение ≥10 °C в течение 30 секунд или повторяющиеся скачки ≥10 °C. Разогрев и смена цели учитываются.')+(watch.active?' '+t('Нестабильная температура сопла'):''):t('Контроль температуры выключен. Включается отдельно для каждого принтера.')):'';
+  const watchDescription=$('temperature-watch-note').textContent+(!watch?.enabled?' '+t('Контроль сопла: раз в 5 секунд. Отклонение ≥10 °C в течение 30 секунд или повторяющиеся скачки ≥10 °C. Разогрев и смена цели учитываются.'):'');
+  $('temperature-watch-control').setAttribute('data-tooltip',t('Контроль температуры сопла')+'. '+watchDescription+' '+t('Нажмите значок, чтобы включить или выключить контроль.'));
   const low=getPrinters().filter(p=>p.filament?.enabled&&p.filament.job?.active&&p.filament.job.low);
   $('filament-alert').hidden=low.length===0;
   $('filament-alert').textContent=low.length?t('Остатка катушки может не хватить')+' — '+low.map(p=>p.printer.name).join(', ')+'. '+t('Проверьте катушку; печать продолжается.'):'';

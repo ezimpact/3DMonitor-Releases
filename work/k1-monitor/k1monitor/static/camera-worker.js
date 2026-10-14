@@ -1,5 +1,5 @@
-import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.102.1';
-import {CameraPlayer} from './camera-player.js?v=0.102.1';
+import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.103.3';
+import {CameraPlayer} from './camera-player.js?v=0.103.3';
 const key=location.hash.slice(1),players=new Map();
 let socket;
 function dispose(entry){entry.player.dispose();clearInterval(entry.timer);entry.container.remove();}

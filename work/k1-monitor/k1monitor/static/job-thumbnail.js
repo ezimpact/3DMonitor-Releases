@@ -1,4 +1,4 @@
-import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.102.1';
+import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.103.3';
 export function setupJobThumbnail({image,placeholder,apiBase='/api/v1',environment=globalThis}){
   const env=environment;let key='',controller=null,url=null,generation=0,retryAt=0,busy=false;
   function clear(){controller?.abort();controller=null;if(url)env.URL.revokeObjectURL(url);url=null;image.removeAttribute('src');image.hidden=true;placeholder.hidden=false;}

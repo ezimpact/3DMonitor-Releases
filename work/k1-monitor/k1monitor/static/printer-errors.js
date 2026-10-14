@@ -1,4 +1,4 @@
-import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.102.1';
+import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.103.3';
 // Short original Russian descriptions; diagnostic codes/raw text remain available.
 // K1 source: https://wiki.creality.com/en/k1-flagship-series/k1-series-general-documents/error-code-summary
 // Runout: official Creality Print 7.2 materialStatus=1 -> key2839, also key116.

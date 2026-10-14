@@ -1,4 +1,4 @@
-import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.102.1';
+import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.103.3';
 export function setupPrinterTools({api,getSelected,getPrinters,onMessage=()=>{},onStateChange=()=>{}}){
   const $=id=>document.getElementById(id);let busy=false,lastId=null,objectTarget=null,objectKey='';
   function message(text){$('tools-message').textContent=t(text);if(text)onMessage(text);}

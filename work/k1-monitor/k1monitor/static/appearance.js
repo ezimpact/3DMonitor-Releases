@@ -1,4 +1,4 @@
-import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.102.1';
+import {t,tm,m,trMarkup,locale} from './i18n.js?v=0.103.3';
 export const defaultAppearance={version:2,accent:'#0872e8',background:'#10161c',panel:'#1a222a',sidebar:'#141b22',shade:70,hasImage:false};
 export const appearancePresets={
   forest:{...defaultAppearance,accent:'#a0efc1',background:'#111715',panel:'#1a221f',sidebar:'#141d18'},

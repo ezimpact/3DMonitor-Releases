@@ -1,4 +1,4 @@
-import {t,tm} from './i18n.js?v=0.102.1';
+import {t,tm} from './i18n.js?v=0.103.3';
 export function droppedFileKind(file){
  if(/\.(stl|step|stp)$/i.test(file.name))return 'model';
  if(/\.(gcode|gco)$/i.test(file.name))return 'gcode';

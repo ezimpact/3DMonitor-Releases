@@ -1,0 +1,12 @@
+#cost-dialog{width:min(720px,calc(100vw - 24px));max-height:calc(100dvh - 24px);overflow:auto}
+.cost-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 18px;margin:14px 0}
+.cost-grid label{display:flex;flex-direction:column;gap:6px;min-width:0}
+.cost-grid input,.cost-grid select{width:100%;box-sizing:border-box}
+.cost-results{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 14px;margin:16px 0}
+.cost-results dt,.cost-results dd{margin:0}
+.cost-results dd{text-align:right;font-variant-numeric:tabular-nums}
+.cost-results .cost-total{font-weight:700;border-top:1px solid var(--border);padding-top:10px}
+#cost-result[hidden]{display:none}
+.cost-printer{font-weight:600;overflow-wrap:anywhere}
+#cost-dialog .dialog-buttons{display:flex;flex-wrap:wrap;gap:8px}
+@media(max-width:480px){.cost-grid{grid-template-columns:1fr}.cost-results{font-size:14px}#cost-dialog .dialog-buttons button{flex:1 1 150px}}
