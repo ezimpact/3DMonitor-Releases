@@ -11,7 +11,7 @@ using Microsoft.Win32;
 
 // This helper never contacts printers or terminates processes.
 static class SetupHelper {
-    static readonly string[] Settings={"config.json","data/printers.json","remote.json","printer-credentials.json","notifications.json","data/print-history.sqlite3","data/filament.sqlite3","data/temperature-watch.json","data/printer-order.json","data/language.json","data/updates.json","data/installer.json","CameraSaver/config.json","CameraSaver/data/screensaver-backup.json","data/installer-screensaver.json"};
+    static readonly string[] Settings={"config.json","data/printers.json","remote.json","printer-credentials.json","notifications.json","data/print-history.sqlite3","data/filament.sqlite3","data/temperature-watch.json","data/print-pricing.json","data/print-costs.sqlite3","data/printer-order.json","data/language.json","data/updates.json","data/installer.json","CameraSaver/config.json","CameraSaver/data/screensaver-backup.json","data/installer-screensaver.json"};
     static readonly string[] DesktopNames={"SCRNSAVE.EXE","ScreenSaveActive","ScreenSaverIsSecure","ScreenSaveTimeOut"};
     static readonly JavaScriptSerializer Json=new JavaScriptSerializer();
     [DllImport("user32.dll",SetLastError=true)] static extern bool SystemParametersInfo(uint action,uint param,IntPtr data,uint flags);

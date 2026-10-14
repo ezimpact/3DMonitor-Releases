@@ -9,7 +9,7 @@ sys.stdout.reconfigure(encoding='utf-8')
 
 workspace=Path(__file__).resolve().parents[2]
 build=Path(__file__).resolve().parent
-setup=workspace/'outputs/Public/3DMonitor-Setup-v0.102.1.exe'
+setup=workspace/'outputs/Public/3DMonitor-Setup-v0.103.3.exe'
 qa=build/('qa '+datetime.datetime.now().strftime('%Y%m%d-%H%M%S'))
 qa.mkdir(exist_ok=True)
 target=qa/'установленная программа'
@@ -35,8 +35,7 @@ def global_state():
     keys=[(r'Control Panel\Desktop',name) for name in ('SCRNSAVE.EXE','ScreenSaveActive','ScreenSaverIsSecure','ScreenSaveTimeOut')]
     keys += [(r'Software\CrealityCameraSaver',name) for name in ('ApplicationPath','RegistryPath')]
     keys += [(runkey,'K1Monitor'),(r'Software\K1Monitor','InstallDir'),(r'Software\Microsoft\Windows\CurrentVersion\Uninstall\K1Monitor','DisplayVersion')]
-    live=workspace/'outputs/3DMonitor-v0.100.4'
-    if not (live/'config.json').exists():live=workspace/'outputs/3DMonitor-v0.100.2'
+    live=workspace/'outputs/3DMonitor-v0.103.3'
     files=['config.json','data/printers.json','data/printer-order.json','data/language.json','data/updates.json','remote.json','printer-credentials.json','CameraSaver/config.json','CameraSaver/data/screensaver-backup.json','notifications.json','data/print-history.sqlite3']
     return {'registry':{key+'::'+name:reg(key,name) for key,name in keys},'live_settings':{name:hashlib.sha256((live/name).read_bytes()).hexdigest() if (live/name).is_file() else None for name in files if name not in ('data/print-history.sqlite3','notifications.json')},'telegram_preferences':{k:v for k,v in json.loads((live/'notifications.json').read_text(encoding='utf-8-sig')).items() if k!='update_offset'} if (live/'notifications.json').exists() else None}
 
@@ -69,6 +68,8 @@ def seed(folder):
         'data/printers.json':{'schema_version':1,'printers':[{'id':'fixture','name':'Тест — НЕ настоящий принтер','ip':'192.168.254.250','protocol':'creality','auto_unload':True,'unload_temperature':234}]},
         'data/printer-order.json':{'schema_version':1,'ids':['fixture']},
         'data/language.json':{'schema_version':1,'language':'ru'},
+        'data/temperature-watch.json':{'schema_version':1,'printers':{'fixture':True}},
+        'data/print-pricing.json':{'schema_version':1,'printers':{'fixture':{'currency':'EUR','price_per_kg':25,'labor_hour_rate':40,'manual_work_cost':10,'extra_material_cost':5,'failure_percent':12}}},
         'data/updates.json':{'schema_version':1,'auto_check':False,'token':'SYNTHETIC-ENCRYPTED-NOT-A-TOKEN'},
         'remote.json':{'fixture_pairing':'synthetic-only','device_name':'Тестовое устройство'},
         'printer-credentials.json':{'fixture_secret':'SYNTHETIC-NEVER-SENT'},
@@ -81,7 +82,17 @@ def seed(folder):
     history=folder/'data/print-history.sqlite3'
     with sqlite3.connect(history) as database:database.execute('CREATE TABLE IF NOT EXISTS fixture(value TEXT)');database.execute("INSERT INTO fixture VALUES ('synthetic history')")
     database.close()
-    return {name:(folder/name).read_bytes() for name in [*values,'data/print-history.sqlite3']}
+    spool=folder/'data/filament.sqlite3'
+    with sqlite3.connect(spool) as database:
+        database.execute('CREATE TABLE IF NOT EXISTS fixture(value TEXT)')
+        database.execute("INSERT INTO fixture VALUES ('synthetic spool checkpoint')")
+    database.close()
+    costs=folder/'data/print-costs.sqlite3'
+    with sqlite3.connect(costs) as database:
+        database.execute('CREATE TABLE IF NOT EXISTS fixture(value TEXT)')
+        database.execute("INSERT INTO fixture VALUES ('synthetic immutable material price')")
+    database.close()
+    return {name:(folder/name).read_bytes() for name in [*values,'data/print-history.sqlite3','data/filament.sqlite3','data/print-costs.sqlite3']}
 
 def same_settings(folder,saved,label):
     def retained(name):
@@ -141,7 +152,7 @@ from k1monitor.language import windows_language
 check(json.loads((target/'data/language.json').read_text())['language']==windows_language(),'installer default matches Windows display language')
 check(reg(runkey,'K1MonitorInstallerTest') is None,'autostart is disabled by default')
 check(reg(testkey,'InstallDir')[0]==str(target),'explicit destination with spaces')
-check(reg(uninstallkey,'DisplayVersion')[0]=='0.102.1','per-user uninstall registration')
+check(reg(uninstallkey,'DisplayVersion')[0]=='0.103.3','per-user uninstall registration')
 check(desktoplink.is_file() and (menu/'3DMonitor.lnk').is_file(),'desktop and Start menu shortcuts')
 check((menu/'Описание программы.lnk').is_file() and (menu/'Удалить 3DMonitor.lnk').is_file(),'correct Cyrillic filenames for installed shortcuts')
 check(json.loads((target/'data/printers.json').read_text())['printers']==[],'empty distributed printer registry')
