@@ -2,7 +2,9 @@
 
 **Keep an eye on every print. / Состояние печати под контролем.**
 
-[Download / Скачать](https://github.com/ezimpact/3DMonitor-Releases/releases/latest) · [Source / Исходники](work/k1-monitor) · [Telegram](https://t.me/ezimpact) · [Email](mailto:ezimpactpsn@gmail.com)
+<img width="2485" height="2355" alt="image" src="https://github.com/user-attachments/assets/009c9d27-d9f3-493c-9c1b-3a63ea123eff" />
+
+[Download / Скачать](https://github.com/ezimpact/3DMonitor-Releases/releases/latest) · [Telegram](https://t.me/ezimpact) · [Email](mailto:ezimpactpsn@gmail.com)
 
 ## English
 
@@ -78,8 +80,6 @@ Example of a `/status` reply: printer status and a camera snapshot. This supplie
 Open the [latest release](https://github.com/ezimpact/3DMonitor-Releases/releases/latest), download **3DMonitor-Setup-v….exe** from **Assets**, and run the installer.
 
 Updates preserve settings, printers, history, Telegram and paired remote devices, and create a backup before replacing files. Update controls are available in **About**. Automatic checks only report new versions; downloading and installation are initiated by the user.
-
-The application source code, tests and installer build scripts are available in [work/](work/). See [BUILD.md](BUILD.md) for running and building the application yourself. A complete [0.102.1 source snapshot ZIP](https://github.com/ezimpact/3DMonitor-Releases/releases/download/v0.102.1/3DMonitor-Source-v0.102.1.zip) is also attached to the release.
 
 ### Feedback
 
