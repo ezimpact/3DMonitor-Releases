@@ -10,18 +10,6 @@
 
 **3DMonitor is a Windows application that brings your 3D printers together in one dashboard.** Follow print progress, temperatures and camera feeds, browse job history, and receive Telegram notifications.
 
-Latest dashboard (Russian interface), with spool status and job filament cost inside the current print:
-
-![Latest printer dashboard](dashboard-v0.103.3.png)
-
-![Print cost calculator](cost-calculator-v0.103.3.png)
-
-English interface example:
-
-![Printer dashboard in English](dashboard-en.jpg)
-
-![Camera view in English](cameras-en.jpg)
-
 ### Features
 
 - **Multiple printers in one dashboard.** Connection status, progress, remaining time and temperatures, plus a dedicated camera view.
