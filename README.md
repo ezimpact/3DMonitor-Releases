@@ -3,6 +3,8 @@
 **Keep an eye on every print. / Состояние печати под контролем.**
 
 <img width="2485" height="2355" alt="image" src="https://github.com/user-attachments/assets/009c9d27-d9f3-493c-9c1b-3a63ea123eff" />
+<img width="2485" height="1435" alt="3dmonitor_v0 104 6_cameras" src="https://github.com/user-attachments/assets/9f2bb9a9-d912-4d67-b579-600bd8f6c505" />
+
 
 [Download / Скачать](https://github.com/ezimpact/3DMonitor-Releases/releases/latest) · [Telegram](https://t.me/ezimpact) · [Email](mailto:ezimpactpsn@gmail.com)
 
